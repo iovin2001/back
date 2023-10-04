@@ -2,25 +2,26 @@ import React, { useEffect, useState } from 'react';
 import '@suiet/wallet-kit/style.css';
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
-const config = {
-  apiKey: 'YOUR_API_KEY',
-  authDomain: 'YOUR_AUTH_DOMAIN',
-  projectId: 'YOUR_PROJECT_ID',
-  storageBucket: 'YOUR_STORAGE_BUCKET',
-  messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-  appId: 'YOUR_APP_ID',
+
+const firebaseConfig = {
+  apiKey: "AIzaSyB4g24SBwUUm_lFYsrxEBi39SDqwfTea9I",
+  authDomain: "users-ada29.firebaseapp.com",
+  projectId: "users-ada29",
+  storageBucket: "users-ada29.appspot.com",
+  messagingSenderId: "557729412960",
+  appId: "1:557729412960:web:731e7fc972d4def6209005",
 };
 
 if (!firebase.apps.length) {
-  firebase.initializeApp(config);
+  firebase.initializeApp(firebaseConfig);
 }
 
 const firestore = firebase.firestore();
 
 function App() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,7 +37,7 @@ function App() {
         setData(usersData);
         setLoading(false);
       } catch (error) {
-        setError(error);
+        setError(error as Error);
         setLoading(false);
       }
     };
