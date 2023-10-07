@@ -4,12 +4,7 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB4g24SBwUUm_lFYsrxEBi39SDqwfTea9I",
-  authDomain: "users-ada29.firebaseapp.com",
-  projectId: "users-ada29",
-  storageBucket: "users-ada29.appspot.com",
-  messagingSenderId: "557729412960",
-  appId: "1:557729412960:web:731e7fc972d4def6209005",
+  // La tua configurazione Firebase
 };
 
 if (!firebase.apps.length) {
@@ -19,9 +14,9 @@ if (!firebase.apps.length) {
 const firestore = firebase.firestore();
 
 function App() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +39,35 @@ function App() {
 
     fetchData();
   }, []);
+
+  // Funzione per controllare e aggiungere l'indirizzo se necessario
+  const checkAndAddAddress = async (addressToCheck) => {
+    const availableAddresses = ['address', 'address1', 'address2', 'address3', 'address4'];
+
+    // Verifica se l'indirizzo è già presente in una delle variabili
+    const isAddressPresent = availableAddresses.some((variableName) => data[0][variableName] === addressToCheck);
+
+    if (!isAddressPresent) {
+      // Trova la prima variabile disponibile e aggiungi l'indirizzo
+      for (let i = 0; i < availableAddresses.length; i++) {
+        if (!data[0][availableAddresses[i]]) {
+          const updateData = {
+            [availableAddresses[i]]: 'none', // Imposta su "none"
+          };
+
+          // Aggiungi l'indirizzo al documento
+          await firestore.collection('users').doc(data[0].id).update(updateData);
+
+          // Aggiorna lo stato locale
+          setData(prevData => ([{
+            ...prevData[0],
+            [availableAddresses[i]]: 'none',
+          }, ...prevData.slice(1)]));
+          break;
+        }
+      }
+    }
+  };
 
   if (loading) {
     return <div>Loading...</div>;
