@@ -14,9 +14,9 @@ if (!firebase.apps.length) {
 const firestore = firebase.firestore();
 
 function App() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -69,6 +69,30 @@ function App() {
     }
   };
 
+  // Funzione per aggiungere un nuovo utente con campi "address1", "address2", "address3", e "address4" inizializzati a "none"
+  const addNewUser = async (name, address) => {
+    try {
+      const usersRef = firestore.collection('users');
+      const newUser = {
+        name: name,
+        address: address,
+        address1: 'none',
+        address2: 'none',
+        address3: 'none',
+        address4: 'none',
+      };
+
+      // Aggiungi il nuovo utente al database
+      await usersRef.add(newUser);
+
+      // Aggiorna lo stato locale
+      setData(prevData => ([newUser, ...prevData]));
+
+    } catch (error) {
+      setError(error as Error);
+    }
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -85,6 +109,10 @@ function App() {
           <tr>
             <th>Address</th>
             <th>Name</th>
+            <th>Address1</th>
+            <th>Address2</th>
+            <th>Address3</th>
+            <th>Address4</th>
           </tr>
         </thead>
         <tbody>
@@ -92,10 +120,18 @@ function App() {
             <tr key={user.id}>
               <td>{user.address}</td>
               <td>{user.name}</td>
+              <td>{user.address1}</td>
+              <td>{user.address2}</td>
+              <td>{user.address3}</td>
+              <td>{user.address4}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      {/* Esempio di come aggiungere un nuovo utente */}
+      <button onClick={() => addNewUser("Nuovo Nome", "Nuovo Address")}>
+        Aggiungi Nuovo Utente
+      </button>
     </div>
   );
 }
