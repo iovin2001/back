@@ -3,7 +3,12 @@ import firebase from 'firebase/compat/app';
 import 'firebase/compat/firestore';
 
 const firebaseConfig = {
-  // La tua configurazione Firebase
+  apiKey: "AIzaSyB4g24SBwUUm_lFYsrxEBi39SDqwfTea9I",
+  authDomain: "users-ada29.firebaseapp.com",
+  projectId: "users-ada29",
+  storageBucket: "users-ada29.appspot.com",
+  messagingSenderId: "557729412960",
+  appId: "1:557729412960:web:731e7fc972d4def6209005",
 };
 
 if (!firebase.apps.length) {
