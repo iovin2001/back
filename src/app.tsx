@@ -52,7 +52,12 @@ function App() {
     return <div>Error: {error.message}</div>;
   }
 
-  const tableHeaders = Object.keys(data[0] || {});
+  // Filtra i dati per nascondere i campi in cui il valore è "none" e i campi `nbasc` e `nasc`
+  const filteredData = data.filter(user => {
+    return user.nbasc !== 'none' && user.nasc !== 'none' && !Object.values(user).includes('none');
+  });
+
+  const tableHeaders = Object.keys(filteredData[0] || {});
 
   return (
     <div>
@@ -66,7 +71,7 @@ function App() {
           </tr>
         </thead>
         <tbody>
-          {data.map(user => (
+          {filteredData.map(user => (
             <tr key={user.id}>
               {tableHeaders.map(header => (
                 <td key={header}>{user[header]}</td>
